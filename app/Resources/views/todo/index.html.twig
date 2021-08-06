@@ -1,1 +1,33 @@
-In Index file.
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div id="wrapper" class="pt-5">
+    <div id="container">
+        <h2 class="page-header">Latest Todos</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">To do</th>
+                    <th scope="col">Due Date</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Name</td>
+                    <td>Date</td>
+                    <td>
+                        <a href="todos/details/1" class="btn btn-primary">View</a>
+                        <a href="todos/edit/1" class="btn btn-warning">Edit</a>
+                        <a href="todos/delete/1" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

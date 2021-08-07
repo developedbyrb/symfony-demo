@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
-In Create file.
-
+    <div id="wrapper" class="pt-5">
+        <div id="container">
+            <h2 class="page-header">Create Todos</h2>
+            {{form_start(form)}}
+            {{form_widget(form)}}
+            {{form_end(form)}}
+        </div>
+    </div>
 {% endblock %}

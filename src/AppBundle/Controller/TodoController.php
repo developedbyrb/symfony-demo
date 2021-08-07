@@ -2,7 +2,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Todo;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -13,7 +18,12 @@ class TodoController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('todo/index.html.twig');
+        $todos = $this->getDoctrine()
+            ->getRepository('AppBundle:Todo')
+            ->findAll();
+        return $this->render('todo/index.html.twig', [
+            'todos' => $todos,
+        ]);
     }
 
     /**
@@ -21,7 +31,22 @@ class TodoController extends Controller
      */
     public function createAction(Request $request)
     {
-        return $this->render('todo/create.html.twig');
+        $todo = new Todo;
+
+        $form = $this->createFormBuilder($todo)
+            ->add('name', TextType::class, ['attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']])
+            ->add('category', TextType::class, ['attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']])
+            ->add('description', TextareaType::class, ['attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']])
+            ->add('priority', ChoiceType::class, ['choices' => ['Low' => 'Low', 'Normal' => 'Normal', 'High' => 'High'], 'attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']])
+            ->add('due_date', DateTimeType::class, ['attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']])
+            ->getForm();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            die('submitted');
+        }
+        return $this->render('todo/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
     /**
      * @Route("/todos/edit/{id}", name="todo_edit")

@@ -15,16 +15,18 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Name</td>
-                    <td>Date</td>
-                    <td>
-                        <a href="todos/details/1" class="btn btn-primary">View</a>
-                        <a href="todos/edit/1" class="btn btn-warning">Edit</a>
-                        <a href="todos/delete/1" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
+                {% for item in todos %}
+                    <tr>
+                        <th scope="row">{{ item.id }}</th>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.dueDate|date('F j, g:i: a') }}</td>
+                        <td>
+                            <a href="todos/details/1" class="btn btn-primary">View</a>
+                            <a href="todos/edit/1" class="btn btn-warning">Edit</a>
+                            <a href="todos/delete/1" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

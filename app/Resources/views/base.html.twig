@@ -32,9 +32,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="/todos/create">Create Todo</a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </nav>
@@ -42,6 +42,13 @@
     <main role="main" class="container">
         <div class="row">
             <div class="col-md-12 pt-5">
+                {% for flash_message in app.session.flashbag.get('notice') %}
+                    <div class="alert alert-success" style="margin-top: 25px;">{{flash_message}}</div>
+                {% endfor %}
+
+                {% for flash_message in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger" style="margin-top: 25px;">{{flash_message}}</div>
+                {% endfor %}
                 {% block body %}{% endblock %}
             </div>
         </div>

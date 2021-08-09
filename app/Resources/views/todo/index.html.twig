@@ -4,7 +4,10 @@
 
 <div id="wrapper" class="pt-5">
     <div id="container">
-        <h2 class="page-header">Latest Todos</h2>
+        <div style="position: relative;">
+            <h2 class="page-header">Latest Todos</h2>
+            <a href="todos/create" class="btn btn-success" style="position:absolute; right: 10px; top:5px;">Create Todo</a>
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -21,9 +24,9 @@
                         <td>{{ item.name }}</td>
                         <td>{{ item.dueDate|date('F j, g:i: a') }}</td>
                         <td>
-                            <a href="todos/details/1" class="btn btn-primary">View</a>
-                            <a href="todos/edit/1" class="btn btn-warning">Edit</a>
-                            <a href="todos/delete/1" class="btn btn-danger">Delete</a>
+                            <a href="todos/details/{{item.id}}" class="btn btn-primary">View</a>
+                            <a href="todos/edit/{{item.id}}" class="btn btn-warning">Edit</a>
+                            <a href="todos/delete/{{item.id}}" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -84,13 +84,90 @@ class TodoController extends Controller
      */
     public function editAction($id, Request $request)
     {
-        return $this->render('todo/edit.html.twig');
+        $todo = $this->getDoctrine()
+            ->getRepository('AppBundle:Todo')
+            ->find($id);
+
+        // set variables
+        $todo->setName($todo->getName());
+        $todo->setCategory($todo->getCategory());
+        $todo->setDescription($todo->getDescription());
+        $todo->setPriority($todo->getPriority());
+        $todo->setDueDate($todo->getDueDate());
+
+        // To create form to add todo
+        $form = $this->createFormBuilder($todo)
+            ->add('name', TextType::class, ['attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']])
+            ->add('category', TextType::class, ['attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']])
+            ->add('description', TextareaType::class, ['attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']])
+            ->add('priority', ChoiceType::class, ['choices' => ['Low' => 'Low', 'Normal' => 'Normal', 'High' => 'High'], 'attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']])
+            ->add('due_date', DateTimeType::class, ['attr' => ['class' => 'form_control', 'style' => 'margin-bottom:15px']])
+            ->add('save', SubmitType::class, ['label' => 'Update Todo', 'attr' => ['class' => 'btn btn-primary', 'style' => 'margin-bottom:15px']])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        // if form is submitted and valid
+        if ($form->isSubmitted() && $form->isValid()) {
+            //Get Data
+            $name = $form['name']->getData();
+            $category = $form['category']->getData();
+            $description = $form['description']->getData();
+            $priority = $form['priority']->getData();
+            $due_date = $form['due_date']->getData();
+            $now = new DateTime('now');
+
+            $em = $this->getDoctrine()->getManager();
+            $todo = $em->getRepository('AppBundle:Todo')->find($id);
+
+            // set variables
+            $todo->setName($name);
+            $todo->setCategory($category);
+            $todo->setDescription($description);
+            $todo->setPriority($priority);
+            $todo->setDueDate($due_date);
+            $todo->setCreateDate($now);
+
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                'Todo Updated.'
+            );
+            return $this->redirectToRoute('todo_list');
+        }
+        return $this->render('todo/edit.html.twig', [
+            'todo' => $todo, 'form' => $form->createView(),
+        ]);
     }
     /**
      * @Route("/todos/details/{id}", name="todo_details")
      */
     public function detailsAction($id)
     {
-        return $this->render('todo/details.html.twig');
+        $todo = $this->getDoctrine()
+            ->getRepository('AppBundle:Todo')
+            ->find($id);
+
+        return $this->render('todo/details.html.twig', [
+            'todo' => $todo,
+        ]);
+    }
+
+    /**
+     * @Route("/todos/delete/{id}", name="todo_delete")
+     */
+    public function deleteAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $todo = $em->getRepository('AppBundle:Todo')->find($id);
+        $em->remove($todo);
+        $em->flush();
+
+        $this->addFlash(
+            'notice',
+            'Todo Removed.'
+        );
+        return $this->redirectToRoute('todo_list');
     }
 }
